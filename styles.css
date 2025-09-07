@@ -1,0 +1,381 @@
+/* Irish Session Chord Display Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: #333;
+    min-height: 100vh;
+}
+
+.header {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header h1 {
+    color: #2d5016;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+select, button {
+    padding: 10px 15px;
+    border: 2px solid #2d5016;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+    color: #2d5016;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover, select:hover {
+    background: #2d5016;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.scroll-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.speed-control input {
+    width: 80px;
+}
+
+.main-content {
+    padding: 30px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.song-card {
+    background: rgba(255, 255, 255, 0.95);
+    margin: 20px 0;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border-left: 8px solid #228B22;
+    transition: transform 0.3s ease;
+}
+
+.song-card:hover {
+    transform: translateY(-5px);
+}
+
+.song-title {
+    font-size: 2em;
+    color: #2d5016;
+    margin-bottom: 15px;
+    text-align: center;
+    border-bottom: 3px solid #228B22;
+    padding-bottom: 10px;
+}
+
+.song-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+}
+
+.chords-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+}
+
+.chords-title {
+    font-size: 1.3em;
+    color: #2d5016;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.chord-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 10px 0;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid #228B22;
+    align-items: center;
+}
+
+.chord-measures {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.measure {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 5px 8px;
+    background: rgba(34, 139, 34, 0.05);
+    border-radius: 4px;
+    border: 1px dashed rgba(34, 139, 34, 0.3);
+}
+
+.measure-separator {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #228B22;
+    margin: 0 5px;
+}
+
+.chord {
+    background: linear-gradient(135deg, #228B22, #32CD32);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1.1em;
+    min-width: 50px;
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+}
+
+.chord:hover {
+    transform: scale(1.1);
+}
+
+.section-label {
+    background: #6c757d;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.scroll-indicator {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    background: rgba(45, 80, 22, 0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    display: none;
+}
+
+/* Editor Modal Styles */
+.editor-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+}
+
+.editor-content {
+    background: white;
+    margin: 20px auto;
+    padding: 30px;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #2d5016;
+    padding-bottom: 15px;
+}
+
+.editor-title {
+    color: #2d5016;
+    font-size: 1.8em;
+    margin: 0;
+}
+
+.close-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.editor-form {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #2d5016;
+}
+
+.form-group input, .form-group select {
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.chord-sections {
+    margin-top: 20px;
+}
+
+.section-editor {
+    background: #f8f9fa;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.section-name {
+    font-weight: bold;
+    color: #2d5016;
+}
+
+.chord-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: monospace;
+}
+
+.editor-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background: #228B22;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.song-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 15px 0;
+}
+
+.song-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 5px 0;
+    background: #f8f9fa;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.song-item:hover {
+    background: #e9ecef;
+}
+
+.song-item.selected {
+    background: #228B22;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    
+    .controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .song-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .chord-line {
+        justify-content: center;
+    }
+
+    .editor-content {
+        margin: 10px;
+        max-height: 95vh;
+    }
+
+    .form-group {
+        grid-template-columns: 1fr;
+    }
+}
