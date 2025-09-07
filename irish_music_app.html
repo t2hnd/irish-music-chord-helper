@@ -176,6 +176,160 @@
             display: none;
         }
 
+        .editor-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .editor-content {
+            background: white;
+            margin: 20px auto;
+            padding: 30px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #2d5016;
+            padding-bottom: 15px;
+        }
+
+        .editor-title {
+            color: #2d5016;
+            font-size: 1.8em;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .editor-form {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #2d5016;
+        }
+
+        .form-group input, .form-group select {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .chord-sections {
+            margin-top: 20px;
+        }
+
+        .section-editor {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .section-name {
+            font-weight: bold;
+            color: #2d5016;
+        }
+
+        .chord-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: #228B22;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .song-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 15px 0;
+        }
+
+        .song-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .song-item:hover {
+            background: #e9ecef;
+        }
+
+        .song-item.selected {
+            background: #228B22;
+            color: white;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2em;
@@ -193,6 +347,15 @@
             .chord-line {
                 justify-content: center;
             }
+
+            .editor-content {
+                margin: 10px;
+                max-height: 95vh;
+            }
+
+            .form-group {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -205,6 +368,7 @@
             </select>
             <button onclick="addSelectedSong()">曲を追加</button>
             <button onclick="clearAllSongs()">全曲クリア</button>
+            <button onclick="toggleEditor()">データ編集</button>
             
             <div class="scroll-controls">
                 <button id="scrollBtn" onclick="toggleAutoScroll()">自動スクロール開始</button>
@@ -228,17 +392,90 @@
         自動スクロール中...
     </div>
 
+    <!-- Music Data Editor Modal -->
+    <div class="editor-modal" id="editorModal">
+        <div class="editor-content">
+            <div class="editor-header">
+                <h2 class="editor-title">楽曲データ編集</h2>
+                <button class="close-btn" onclick="toggleEditor()">×</button>
+            </div>
+            
+            <div class="song-list" id="songList">
+                <!-- Song list will be populated here -->
+            </div>
+            
+            <div class="editor-form">
+                <div class="form-group">
+                    <label>曲名:</label>
+                    <input type="text" id="songTitle" placeholder="曲名を入力">
+                </div>
+                
+                <div class="form-group">
+                    <label>キー:</label>
+                    <input type="text" id="songKey" placeholder="例: G, Am, D">
+                </div>
+                
+                <div class="form-group">
+                    <label>拍子:</label>
+                    <select id="songTime">
+                        <option value="4/4">4/4</option>
+                        <option value="6/8">6/8</option>
+                        <option value="9/8">9/8</option>
+                        <option value="3/4">3/4</option>
+                        <option value="2/4">2/4</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>ジャンル:</label>
+                    <select id="songType">
+                        <option value="Jig">Jig</option>
+                        <option value="Reel">Reel</option>
+                        <option value="Air">Air</option>
+                        <option value="Ballad">Ballad</option>
+                        <option value="Song">Song</option>
+                        <option value="Slip Jig">Slip Jig</option>
+                        <option value="Hornpipe">Hornpipe</option>
+                        <option value="Polka">Polka</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="chord-sections" id="chordSections">
+                <h3>コード進行セクション</h3>
+                <div class="section-editor">
+                    <div class="section-header">
+                        <span class="section-name">A Part</span>
+                        <button class="btn-danger" onclick="removeSection(this)">削除</button>
+                    </div>
+                    <input type="text" class="chord-input" placeholder="例: G D Em C G D G G" data-section="A Part">
+                </div>
+            </div>
+            
+            <div class="editor-actions">
+                <button class="btn-secondary" onclick="addSection()">セクション追加</button>
+                <button class="btn-primary" onclick="saveSong()">楽曲保存</button>
+                <button class="btn-secondary" onclick="newSong()">新規作成</button>
+                <button class="btn-danger" onclick="deleteSong()">楽曲削除</button>
+                <button class="btn-secondary" onclick="exportData()">データ出力</button>
+            </div>
+        </div>
+    </div>
+
     <script src="music-data.js"></script>
     <script>
 
         let isScrolling = false;
         let scrollInterval;
         let scrollSpeed = 3;
+        let currentEditingSong = null;
+        let editedSongs = {...irishSongs}; // Copy of original data for editing
 
         // 初期化
         function initializeApp() {
             populateSongSelect();
             updateSpeedDisplay();
+            populateEditorSongList();
         }
 
         // セレクトボックスに曲を追加
@@ -412,6 +649,264 @@
                     startAutoScroll();
                 }
             });
+        }
+
+        // ============ Editor Functions ============
+        
+        // Toggle editor modal
+        function toggleEditor() {
+            const modal = document.getElementById('editorModal');
+            if (modal.style.display === 'block') {
+                modal.style.display = 'none';
+            } else {
+                modal.style.display = 'block';
+                populateEditorSongList();
+            }
+        }
+
+        // Populate song list in editor
+        function populateEditorSongList() {
+            const songList = document.getElementById('songList');
+            songList.innerHTML = '';
+            
+            Object.keys(editedSongs).forEach(songName => {
+                const songItem = document.createElement('div');
+                songItem.className = 'song-item';
+                songItem.innerHTML = `
+                    <span>${songName}</span>
+                    <small>${editedSongs[songName].key} - ${editedSongs[songName].type}</small>
+                `;
+                songItem.onclick = () => loadSongForEdit(songName);
+                songList.appendChild(songItem);
+            });
+        }
+
+        // Load song data into editor form
+        function loadSongForEdit(songName) {
+            currentEditingSong = songName;
+            const song = editedSongs[songName];
+            
+            // Clear previous selection
+            document.querySelectorAll('.song-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Highlight selected song
+            event.target.closest('.song-item').classList.add('selected');
+            
+            // Populate form
+            document.getElementById('songTitle').value = songName;
+            document.getElementById('songKey').value = song.key;
+            document.getElementById('songTime').value = song.time;
+            document.getElementById('songType').value = song.type;
+            
+            // Populate chord sections
+            populateChordSections(song.chords);
+        }
+
+        // Populate chord sections in editor
+        function populateChordSections(chords) {
+            const sectionsContainer = document.getElementById('chordSections');
+            const title = sectionsContainer.querySelector('h3');
+            sectionsContainer.innerHTML = '';
+            sectionsContainer.appendChild(title);
+            
+            Object.entries(chords).forEach(([sectionName, chordArray]) => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'section-editor';
+                sectionDiv.innerHTML = `
+                    <div class="section-header">
+                        <input type="text" class="section-name" value="${sectionName}" onchange="updateSectionName(this)">
+                        <button class="btn-danger" onclick="removeSection(this)">削除</button>
+                    </div>
+                    <input type="text" class="chord-input" value="${chordArray.join(' ')}" data-section="${sectionName}">
+                `;
+                sectionsContainer.appendChild(sectionDiv);
+            });
+        }
+
+        // Add new chord section
+        function addSection() {
+            const sectionsContainer = document.getElementById('chordSections');
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'section-editor';
+            sectionDiv.innerHTML = `
+                <div class="section-header">
+                    <input type="text" class="section-name" value="New Section" onchange="updateSectionName(this)">
+                    <button class="btn-danger" onclick="removeSection(this)">削除</button>
+                </div>
+                <input type="text" class="chord-input" placeholder="例: G D Em C G D G G" data-section="New Section">
+            `;
+            sectionsContainer.appendChild(sectionDiv);
+        }
+
+        // Remove chord section
+        function removeSection(button) {
+            if (confirm('このセクションを削除しますか？')) {
+                button.closest('.section-editor').remove();
+            }
+        }
+
+        // Update section name
+        function updateSectionName(input) {
+            const chordInput = input.closest('.section-editor').querySelector('.chord-input');
+            chordInput.setAttribute('data-section', input.value);
+        }
+
+        // Create new song
+        function newSong() {
+            currentEditingSong = null;
+            
+            // Clear form
+            document.getElementById('songTitle').value = '';
+            document.getElementById('songKey').value = 'G';
+            document.getElementById('songTime').value = '4/4';
+            document.getElementById('songType').value = 'Jig';
+            
+            // Clear selections
+            document.querySelectorAll('.song-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Reset chord sections
+            const sectionsContainer = document.getElementById('chordSections');
+            const title = sectionsContainer.querySelector('h3');
+            sectionsContainer.innerHTML = '';
+            sectionsContainer.appendChild(title);
+            
+            // Add default section
+            addSection();
+        }
+
+        // Save song
+        function saveSong() {
+            const title = document.getElementById('songTitle').value.trim();
+            const key = document.getElementById('songKey').value.trim();
+            const time = document.getElementById('songTime').value;
+            const type = document.getElementById('songType').value;
+            
+            if (!title) {
+                alert('曲名を入力してください');
+                return;
+            }
+            
+            // Collect chord sections
+            const chords = {};
+            const sectionEditors = document.querySelectorAll('.section-editor');
+            
+            sectionEditors.forEach(editor => {
+                const sectionName = editor.querySelector('.section-name').value.trim();
+                const chordText = editor.querySelector('.chord-input').value.trim();
+                
+                if (sectionName && chordText) {
+                    // Parse chords (split by spaces, filter empty)
+                    chords[sectionName] = chordText.split(/\s+/).filter(chord => chord);
+                }
+            });
+            
+            if (Object.keys(chords).length === 0) {
+                alert('少なくとも1つのコード進行セクションを入力してください');
+                return;
+            }
+            
+            // Remove old song if name changed
+            if (currentEditingSong && currentEditingSong !== title) {
+                delete editedSongs[currentEditingSong];
+            }
+            
+            // Save song
+            editedSongs[title] = {
+                key: key,
+                time: time,
+                type: type,
+                chords: chords
+            };
+            
+            currentEditingSong = title;
+            
+            // Refresh displays
+            populateEditorSongList();
+            populateSongSelect();
+            
+            alert('楽曲を保存しました');
+        }
+
+        // Delete current song
+        function deleteSong() {
+            if (!currentEditingSong) {
+                alert('削除する楽曲を選択してください');
+                return;
+            }
+            
+            if (confirm(`「${currentEditingSong}」を削除しますか？`)) {
+                delete editedSongs[currentEditingSong];
+                currentEditingSong = null;
+                
+                // Refresh displays
+                populateEditorSongList();
+                populateSongSelect();
+                newSong(); // Clear form
+                
+                alert('楽曲を削除しました');
+            }
+        }
+
+        // Export data as JavaScript
+        function exportData() {
+            const dataString = `// Irish traditional music songs database
+const irishSongs = ${JSON.stringify(editedSongs, null, 4)};`;
+            
+            // Create download
+            const blob = new Blob([dataString], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'music-data.js';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('データをmusic-data.jsとしてダウンロードしました');
+        }
+
+        // Update song select to use edited songs
+        function populateSongSelect() {
+            const select = document.getElementById('songSelect');
+            // Clear existing options except the first one
+            select.innerHTML = '<option value="">曲を選択してください</option>';
+            
+            Object.keys(editedSongs).forEach(songName => {
+                const option = document.createElement('option');
+                option.value = songName;
+                option.textContent = songName;
+                select.appendChild(option);
+            });
+        }
+
+        // Update addSelectedSong to use edited songs
+        function addSelectedSong() {
+            const select = document.getElementById('songSelect');
+            const songName = select.value;
+            
+            if (!songName) {
+                alert('曲を選択してください');
+                return;
+            }
+
+            const songData = editedSongs[songName]; // Use edited data
+            const songDisplay = document.getElementById('songDisplay');
+            
+            // 初回追加時は説明文を削除
+            if (songDisplay.children.length === 1 && songDisplay.children[0].style.textAlign === 'center') {
+                songDisplay.innerHTML = '';
+            }
+
+            const songCard = createSongCard(songName, songData);
+            songDisplay.appendChild(songCard);
+            
+            // 追加後は選択をリセット
+            select.value = '';
         }
 
         // ページ読み込み時に初期化
