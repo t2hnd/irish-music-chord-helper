@@ -1,5 +1,43 @@
 // Irish traditional music songs database
 const irishSongs = {
+    "Ballydesmond Polka 2": {
+        key: "A Dorian",
+        time: "2/4",
+        type: "Polka",
+        chords: {
+            "A Part": "Am | Am | G | G Em | Am | Am | Em | Am",
+            "B Part": "Am | Am | G | G Em | Am | C | Em | Am"
+        }
+    },
+    "Cooley's Reel": {
+        key: "E Dorian or E Minor",
+        time: "4/4",
+        type: "Reel",
+        chords: {
+            "A Part": "Em | Em | D | D | Em | Em | D | D Em",
+            "B Part": "Em | Em | D | D | Em | Em | D | D Em"
+        }
+    },
+    "The Sally Gardens": {
+        key: "G",
+        time: "2/2",
+        type: "Reel",
+        chords: {
+            "A Part": "G | G | G C | D | G | G | G C | D G",
+            "B Part": "G | G | C | D | G | G | G C | D G"
+        }
+    },
+    "The Lark In The Morning": {
+        key: "D",
+        time: "6/8",
+        type: "Jig",
+        chords: {
+            "A Part": "D | G | D | G | D | G | D A | G",
+            "B Part": "D | G D | D | G | D | G D | G D | Em G",
+            "C Part": "D | D | D | Em G | D | D | G D | Em G",
+            "D Part": "D | D | D | G | D | A D | G D | Em G | D",
+        }
+    },
     "The Foggy Dew": {
         key: "Dm",
         time: "4/4",
