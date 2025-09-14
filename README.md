@@ -2,6 +2,12 @@
 
 An interactive web application for displaying chord progressions of Irish traditional music, designed for musicians during Irish music sessions.
 
+## 🌟 Live Demo
+
+**Try it now**: [https://irish-music-chord-helper.netlify.app](https://irish-music-chord-helper.netlify.app)
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/71665a7a-b8be-40af-902d-44bd3cd425d1/deploy-status)](https://app.netlify.com/projects/irish-music-chord-helper)
+
 ## ✨ Features
 
 - 🎼 **Interactive Chord Display**: View chord progressions with measure separators
@@ -19,8 +25,8 @@ An interactive web application for displaying chord progressions of Irish tradit
 
 1. **Clone and setup**:
    ```bash
-   git clone <repository-url>
-   cd irish-music-chord
+   git clone https://github.com/t2hnd/irish-music-chord-helper.git
+   cd irish-music-chord-helper
    npm install
    ```
 
@@ -35,7 +41,7 @@ An interactive web application for displaying chord progressions of Irish tradit
    npm run dev
    ```
 
-4. **Open in browser**: http://localhost:3000
+4. **Open in browser**: http://localhost:5173
 
 ### Option 2: Simple File Hosting
 
@@ -164,7 +170,31 @@ Chord progressions support:
 
 ## 🌐 Deployment
 
-### Static Hosting (Netlify, Vercel, GitHub Pages)
+This project is deployed on **Netlify** with automatic deployments from GitHub.
+
+### Live Application
+- **Production URL**: https://irish-music-chord-helper.netlify.app
+- **Admin Panel**: https://app.netlify.com/projects/irish-music-chord-helper
+- **Auto-deploy**: Triggered on pushes to `master` branch
+
+### Deploy Your Own
+1. **Fork this repository**
+2. **Connect to Netlify**:
+   - Sign up at [netlify.com](https://netlify.com)
+   - Click "New site from Git"
+   - Connect your GitHub fork
+   - Netlify will auto-detect build settings from `netlify.toml`
+
+3. **Configure environment variables** (optional):
+   ```bash
+   VITE_ALGOLIA_APP_ID=your_algolia_app_id
+   VITE_ALGOLIA_SEARCH_API_KEY=your_search_api_key
+   VITE_ALGOLIA_INDEX_NAME=irish_music_songs
+   ```
+
+### Other Hosting Options
+
+#### Static Hosting (Vercel, GitHub Pages, etc.)
 ```bash
 npm run build
 # Deploy /dist folder
