@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Irish Session Chord Display</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="header">
@@ -86,6 +85,16 @@
                         <option value="Polka">Polka</option>
                     </select>
                 </div>
+                
+                <div class="form-group">
+                    <label>表示設定:</label>
+                    <div class="checkbox-container">
+                        <label>
+                            <input type="checkbox" id="songHidden">
+                            曲選択リストから非表示にする
+                        </label>
+                    </div>
+                </div>
             </div>
             
             <div class="chord-sections" id="chordSections">
@@ -109,7 +118,6 @@
         </div>
     </div>
 
-    <script src="music-data.js"></script>
-    <script src="app.js"></script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>

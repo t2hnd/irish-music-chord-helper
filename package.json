@@ -1,0 +1,57 @@
+{
+  "name": "irish-music-chord-display",
+  "version": "2.0.0",
+  "description": "Interactive chord progression display for Irish traditional music sessions",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write src/**/*.{js,css,html}",
+    "migrate": "node scripts/migrate-data.js"
+  },
+  "keywords": [
+    "irish-music",
+    "traditional-music",
+    "chord-progressions",
+    "music-sessions",
+    "algolia",
+    "music-app"
+  ],
+  "author": {
+    "name": "Irish Music Chord Display Contributors"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "algoliasearch": "^5.37.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.3.0",
+    "dotenv": "^16.4.0",
+    "@vitejs/plugin-legacy": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/irish-music-chord-display.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/irish-music-chord-display/issues"
+  },
+  "homepage": "https://your-username.github.io/irish-music-chord-display",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "volta": {
+    "node": "20.11.0",
+    "npm": "10.2.4"
+  }
+}
