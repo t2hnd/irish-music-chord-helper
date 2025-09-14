@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Environment Variables</title>
+</head>
+<body>
+    <h1>Environment Variables Test</h1>
+    <div id="results"></div>
+
+    <script type="module">
+        const results = document.getElementById('results');
+        
+        function log(message) {
+            const div = document.createElement('div');
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+        
+        // Test environment variables
+        log(`<h3>Environment Variables:</h3>`);
+        log(`VITE_ALGOLIA_APP_ID: ${import.meta.env.VITE_ALGOLIA_APP_ID || 'NOT SET'}`);
+        log(`VITE_ALGOLIA_SEARCH_API_KEY: ${import.meta.env.VITE_ALGOLIA_SEARCH_API_KEY ? 'SET (hidden)' : 'NOT SET'}`);
+        log(`VITE_ALGOLIA_INDEX_NAME: ${import.meta.env.VITE_ALGOLIA_INDEX_NAME || 'NOT SET'}`);
+        
+        log(`<h3>All import.meta.env:</h3>`);
+        log(`<pre>${JSON.stringify(import.meta.env, null, 2)}</pre>`);
+    </script>
+</body>
+</html>

@@ -43,6 +43,12 @@ class IrishMusicApp {
             // Load songs from Algolia or fallback
             await this.loadSongsFromAlgolia();
             
+            // If no songs were loaded from Algolia, use local data as fallback
+            if (Object.keys(this.editedSongs).length === 0) {
+                console.log('No songs loaded from Algolia, using local data as fallback');
+                this.editedSongs = this.convertLocalToAlgoliaFormat(irishSongs);
+            }
+            
         } catch (error) {
             console.warn('Failed to initialize Algolia, using local data:', error);
             // Fallback to original data

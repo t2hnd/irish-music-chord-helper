@@ -1,4 +1,4 @@
-import { algoliasearch } from 'algoliasearch';
+import * as algoliasearch from 'algoliasearch/lite';
 
 /**
  * Algolia service for managing Irish music song data
@@ -28,11 +28,17 @@ class AlgoliaService {
      */
     async initialize() {
         try {
+            console.log('🔧 Algolia config:', {
+                appId: this.config.appId ? `${this.config.appId.substring(0, 6)}...` : 'MISSING',
+                apiKey: this.config.apiKey ? `${this.config.apiKey.substring(0, 6)}...` : 'MISSING',
+                indexName: this.config.indexName
+            });
+            
             if (!this.config.appId || !this.config.apiKey) {
-                throw new Error('Missing Algolia configuration');
+                throw new Error(`Missing Algolia configuration: appId=${!!this.config.appId}, apiKey=${!!this.config.apiKey}`);
             }
             
-            this.client = algoliasearch(this.config.appId, this.config.apiKey);
+            this.client = algoliasearch.algoliasearch(this.config.appId, this.config.apiKey);
             this.index = this.client.initIndex(this.config.indexName);
             
             // Test connection with a simple search
@@ -56,11 +62,14 @@ class AlgoliaService {
             const stored = localStorage.getItem('irish_songs_cache');
             if (stored) {
                 this.fallbackData = JSON.parse(stored);
+                console.log('✅ Loaded cached songs from localStorage');
                 return;
             }
             
             // Initialize with empty array if no cache
+            // Note: Original irishSongs data will be loaded by the main app as fallback
             this.fallbackData = [];
+            console.log('⚠️ No cached songs found in localStorage, will use original data as fallback');
         } catch (error) {
             console.error('Failed to load fallback data:', error);
             this.fallbackData = [];
@@ -192,7 +201,7 @@ class AlgoliaService {
             throw new Error('Admin API key is required for write operations');
         }
         
-        this.adminClient = algoliasearch(this.config.appId, adminApiKey);
+        this.adminClient = algoliasearch.algoliasearch(this.config.appId, adminApiKey);
         this.adminIndex = this.adminClient.initIndex(this.config.indexName);
         console.log('✅ Admin client initialized for write operations');
     }

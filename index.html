@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Irish Session Chord Display</title>
+</head>
+<body>
+    <div class="header">
+        <h1>🍀 Irish Session Chord Display 🎵</h1>
+        <div class="controls">
+            <select id="songSelect">
+                <option value="">曲を選択してください</option>
+            </select>
+            <button onclick="addSelectedSong()">曲を追加</button>
+            <button onclick="clearAllSongs()">全曲クリア</button>
+            <button onclick="toggleEditor()">データ編集</button>
+            
+            <div class="scroll-controls">
+                <button id="scrollBtn" onclick="toggleAutoScroll()">自動スクロール開始</button>
+                <div class="speed-control">
+                    <label>速度:</label>
+                    <input type="range" id="scrollSpeed" min="1" max="10" value="3" />
+                    <span id="speedValue">3</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content" id="songDisplay">
+        <div style="text-align: center; padding: 50px; color: rgba(255,255,255,0.8); font-size: 1.2em;">
+            <p>左上のセレクトボックスから曲を選んで「曲を追加」ボタンを押してください</p>
+            <p>複数の曲を縦に並べてセッション用に表示できます</p>
+        </div>
+    </div>
+
+    <div class="scroll-indicator" id="scrollIndicator">
+        自動スクロール中...
+    </div>
+
+    <!-- Music Data Editor Modal -->
+    <div class="editor-modal" id="editorModal">
+        <div class="editor-content">
+            <div class="editor-header">
+                <h2 class="editor-title">楽曲データ編集</h2>
+                <button class="close-btn" onclick="toggleEditor()">×</button>
+            </div>
+            
+            <div class="song-list" id="songList">
+                <!-- Song list will be populated here -->
+            </div>
+            
+            <div class="editor-form">
+                <div class="form-group">
+                    <label>曲名:</label>
+                    <input type="text" id="songTitle" placeholder="曲名を入力">
+                </div>
+                
+                <div class="form-group">
+                    <label>キー:</label>
+                    <input type="text" id="songKey" placeholder="例: G, Am, D">
+                </div>
+                
+                <div class="form-group">
+                    <label>拍子:</label>
+                    <select id="songTime">
+                        <option value="4/4">4/4</option>
+                        <option value="6/8">6/8</option>
+                        <option value="9/8">9/8</option>
+                        <option value="3/4">3/4</option>
+                        <option value="2/4">2/4</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>ジャンル:</label>
+                    <select id="songType">
+                        <option value="Jig">Jig</option>
+                        <option value="Reel">Reel</option>
+                        <option value="Air">Air</option>
+                        <option value="Ballad">Ballad</option>
+                        <option value="Song">Song</option>
+                        <option value="Slip Jig">Slip Jig</option>
+                        <option value="Hornpipe">Hornpipe</option>
+                        <option value="Polka">Polka</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>表示設定:</label>
+                    <div class="checkbox-container">
+                        <label>
+                            <input type="checkbox" id="songHidden">
+                            曲選択リストから非表示にする
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chord-sections" id="chordSections">
+                <h3>コード進行セクション</h3>
+                <div class="section-editor">
+                    <div class="section-header">
+                        <span class="section-name">A Part</span>
+                        <button class="btn-danger" onclick="removeSection(this)">削除</button>
+                    </div>
+                    <input type="text" class="chord-input" placeholder="例: G D | Em C | G D G | G (| で小節区切り)" data-section="A Part">
+                </div>
+            </div>
+            
+            <div class="editor-actions">
+                <button class="btn-secondary" onclick="addSection()">セクション追加</button>
+                <button class="btn-primary" onclick="saveSong()">楽曲保存</button>
+                <button class="btn-secondary" onclick="newSong()">新規作成</button>
+                <button class="btn-danger" onclick="deleteSong()">楽曲削除</button>
+                <button class="btn-secondary" onclick="exportData()">データ出力</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

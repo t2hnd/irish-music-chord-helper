@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Algolia Connection</title>
+    <script src="https://cdn.jsdelivr.net/npm/algoliasearch@5.37.0/dist/algoliasearch.umd.js"></script>
+</head>
+<body>
+    <h1>Algolia Connection Debug</h1>
+    <button onclick="testSearchConnection()">Test Search Connection</button>
+    <button onclick="testAdminConnection()">Test Admin Connection</button>
+    <div id="results"></div>
+
+    <script>
+        const APP_ID = 'CZJUFK0LPL';
+        const SEARCH_API_KEY = '3ab720d7ac1634eb893f4435bef122bf';
+        const INDEX_NAME = 'irish_music_songs';
+
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.style.color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'black';
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            results.appendChild(div);
+        }
+
+        async function testSearchConnection() {
+            log('Testing search connection...');
+            try {
+                const client = algoliasearch(APP_ID, SEARCH_API_KEY);
+                const index = client.initIndex(INDEX_NAME);
+                
+                const result = await index.search('', { hitsPerPage: 1 });
+                log(`✅ Search connection successful! Found ${result.nbHits} total records`, 'success');
+                log(`Index exists: ${result.nbHits >= 0 ? 'Yes' : 'No'}`, 'success');
+            } catch (error) {
+                log(`❌ Search connection failed: ${error.message}`, 'error');
+                console.error('Full error:', error);
+            }
+        }
+
+        async function testAdminConnection() {
+            const adminKey = prompt('Enter your Admin API Key:');
+            if (!adminKey) return;
+
+            log('Testing admin connection...');
+            try {
+                const client = algoliasearch(APP_ID, adminKey);
+                const index = client.initIndex(INDEX_NAME);
+                
+                // Try to save a test object
+                const testObj = {
+                    objectID: 'test-connection',
+                    title: 'Test Song',
+                    key: 'G',
+                    type: 'Test'
+                };
+                
+                await index.saveObject(testObj);
+                log('✅ Admin connection successful! Can write to index', 'success');
+                
+                // Clean up test object
+                await index.deleteObject('test-connection');
+                log('✅ Test object cleaned up', 'success');
+                
+            } catch (error) {
+                log(`❌ Admin connection failed: ${error.message}`, 'error');
+                console.error('Full error:', error);
+                
+                if (error.message.includes('Invalid API key')) {
+                    log('👉 Check that you\'re using the Admin API key, not Search-Only key', 'error');
+                }
+                if (error.message.includes('Index does not exist')) {
+                    log('👉 The index "irish_music_songs" doesn\'t exist. Create it in Algolia dashboard first.', 'error');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
