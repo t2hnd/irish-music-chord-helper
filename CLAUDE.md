@@ -4,103 +4,195 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a single-page HTML application for displaying chord progressions of Irish traditional music. The application provides an interactive interface for musicians to view and follow along with chord changes during Irish music sessions.
+This is a modern web application for displaying chord progressions of Irish traditional music. The application provides an interactive interface for musicians to view and follow along with chord changes during Irish music sessions, with cloud storage capabilities via Algolia.
 
 ## Architecture
 
-### Modular File Structure
-- **irish_music_app.html**: Main HTML structure and layout
-- **styles.css**: All CSS styling including responsive design and editor modal
-- **app.js**: JavaScript application logic and functionality
-- **music-data.js**: Song database with chord progressions
+### Modern Build System
+- **Build Tool**: Vite with hot module replacement
+- **Package Manager**: npm with proper dependency management
+- **Deployment**: Netlify with automatic builds from GitHub
+- **Environment**: Node.js with ES modules
 
-### Core Components
-
-1. **Song Database** (`music-data.js`):
-   - Contains chord progressions for traditional Irish songs
-   - Each song has metadata (key, time signature, type) and section-based chord progressions
-   - Supports various Irish music types: Jigs, Reels, Airs, Ballads, Slip Jigs
-
-2. **UI Components** (`styles.css`):
-   - Header with controls for song selection and auto-scroll
-   - Dynamic song cards displaying chord progressions
-   - Auto-scroll functionality with speed control
-   - Modal-based music data editor with comprehensive styling
-
-3. **Application Logic** (`app.js`):
-   - `populateSongSelect()`: Populates dropdown with available songs
-   - `addSelectedSong()`: Adds selected song to display
-   - `createSongCard()`: Generates song display cards
-   - `createChordsHTML()`: Formats chord progressions with section labels
-   - Auto-scroll system for hands-free operation during performances
-   - **Music Editor Functions**: Complete CRUD operations for song management
-
-## Running the Application
-
-This is a client-side only application with no build process required:
-
-```bash
-# Simply open in browser
-open irish_music_app.html
-# or
-firefox irish_music_app.html
-# or double-click the file in your file manager
+### Project Structure
 ```
+src/
+├── components/           # React-like components
+│   ├── editor.js        # Music data editor with CRUD operations
+│   └── migration.js     # Data migration tools for Algolia
+├── services/            # Business logic services
+│   ├── algolia.js       # Algolia integration with fallback support
+│   └── data.js          # Local song database
+├── styles/              # CSS modules
+│   └── main.css         # Global styles and components
+├── utils/               # Utility functions
+│   └── index.js         # Helper functions and modals
+└── main.js              # Application entry point
+
+Configuration Files:
+├── package.json         # Dependencies and scripts
+├── vite.config.js       # Build configuration
+├── netlify.toml         # Deployment settings
+├── .env.example         # Environment variable template
+└── index.html           # Main HTML template
+```
+
+### Core Services
+
+1. **Algolia Service** (`src/services/algolia.js`):
+   - Cloud-based song storage and search
+   - Automatic fallback to localStorage when offline
+   - Secure admin API key handling for write operations
+   - Environment variable configuration support
+
+2. **Music Editor** (`src/components/editor.js`):
+   - Full CRUD operations for song management
+   - Integration with both Algolia and local storage
+   - Dynamic chord section editing
+   - Hide/show functionality for songs
+
+3. **Data Migration** (`src/components/migration.js`):
+   - Secure migration from local data to Algolia
+   - Validation and testing of migrated data
+   - Comprehensive logging and error handling
+
+## Environment Configuration
+
+The app supports both cloud and offline modes via environment variables:
+
+```env
+VITE_ALGOLIA_APP_ID=your_algolia_app_id
+VITE_ALGOLIA_SEARCH_API_KEY=your_search_only_api_key  
+VITE_ALGOLIA_INDEX_NAME=irish_music_songs
+```
+
+### Data Storage Hierarchy
+1. **Algolia Cloud** (when configured) - Primary data source
+2. **localStorage Cache** - Secondary/offline cache  
+3. **Local Data** (`src/services/data.js`) - Final fallback
+
+## Development Workflow
+
+### Local Development
+```bash
+# Install dependencies
+npm install
+
+# Start development server with HMR
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+### Linting and Formatting
+```bash
+# Run ESLint
+npm run lint
+
+# Auto-fix linting issues
+npm run lint:fix
+
+# Format code with Prettier
+npm run format
+```
+
+### Deployment
+The app is deployed on Netlify with automatic builds:
+- **Live URL**: https://irish-music-chord-helper.netlify.app
+- **Admin Panel**: https://app.netlify.com/projects/irish-music-chord-helper
+- **Auto-deploy**: Triggered on GitHub pushes to master branch
 
 ## Song Data Structure
 
-Songs follow this format:
+Songs follow this enhanced format:
 ```javascript
-"Song Name": {
+{
+    objectID: "unique-song-identifier",
+    title: "Song Name",
     key: "Key signature",
     time: "Time signature", 
     type: "Music type (Jig/Reel/Air/etc.)",
     chords: {
-        "Section Name": ["Chord1", "Chord2", "..."],
-        // Multiple sections supported
-    }
+        "Section Name": "G D | Em C | G D G | G"
+        // Supports measure separators with |
+    },
+    hidden: false,              // Hide from dropdown while keeping in editor
+    dateCreated: 1640995200000,  // Unix timestamp
+    dateModified: 1640995200000, // Unix timestamp
+    searchableText: "...",       // Auto-generated for Algolia search
+    popularity: 0                // For future ranking features
 }
 ```
 
 ## Key Features
 
-### Music Data Editor
-- **Access**: Click "データ編集" button in main interface
-- **CRUD Operations**: Create, read, update, delete songs
-- **Dynamic Editing**: Add/remove chord sections with custom names
-- **Real-time Preview**: Changes immediately visible in main application
-- **Export Functionality**: Download updated music-data.js file
-- **Responsive Design**: Works on desktop and mobile devices
+### Music Data Management
+- **Cloud Storage**: Algolia integration for scalable data management
+- **Offline Support**: Automatic fallback to local data and localStorage
+- **Data Migration**: Secure tools for moving data between storage systems
+- **Version Control**: Timestamps and modification tracking
 
-### Auto-Scroll System
-- Hands-free scrolling for live performance
-- Adjustable speed control (1-10)
-- Visual indicator when active
-- Automatic stop at page bottom
+### User Interface
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Auto-Scroll**: Hands-free scrolling for live performances
+- **Real-time Editing**: Changes immediately visible across components
+- **Accessibility**: Keyboard navigation and screen reader support
+
+### Security Features
+- **API Key Management**: Secure handling of admin credentials
+- **Temporary Admin Access**: Admin keys are used once and discarded
+- **Environment Variables**: Sensitive data stored in deployment environment
+- **Input Validation**: Comprehensive data validation and sanitization
 
 ## Development Notes
 
-- Pure HTML/CSS/JavaScript with no external dependencies
-- Modular architecture with separated concerns
-- Responsive design with mobile support
-- Uses CSS Grid and Flexbox for layout
-- Color scheme follows Irish theme (greens and traditional colors)
-- Japanese UI text (曲を選択してください, etc.)
+### Modern JavaScript Features
+- ES6 modules with proper imports/exports
+- Async/await for all asynchronous operations
+- Template literals for dynamic HTML generation
+- Destructuring and spread operators throughout
+
+### Build Optimization
+- Tree shaking for minimal bundle size
+- Code splitting for better loading performance
+- CSS extraction and minification
+- Source maps for debugging
+
+### Error Handling
+- Comprehensive try/catch blocks
+- Graceful degradation when services fail
+- User-friendly error messages
+- Detailed logging for development
+
+## API Integration
+
+### Algolia Search API v5
+- **Search Operations**: Public search-only API key
+- **Write Operations**: Admin API key required (requested via secure modal)
+- **Batch Operations**: Optimized bulk data operations
+- **Connection Testing**: Automatic health checks
+
+### Security Best Practices
+- Admin API keys never stored in code or localStorage
+- Temporary admin clients cleaned up after use
+- Environment variables for all sensitive configuration
+- HTTPS enforcement for all external communications
 
 ## Adding New Songs
 
-Two methods available:
-1. **Via Editor**: Use the built-in "データ編集" interface for GUI-based editing
-2. **Direct Edit**: Modify `music-data.js` file directly following the structure:
+### Via Editor Interface
+1. Click "データ編集" (Data Edit) button
+2. Click "新規作成" (New Song) button
+3. Fill in song details and chord progressions
+4. Use "|" to separate measures in chord progressions
+5. Save to both Algolia (if configured) and local storage
 
-```javascript
-"Song Name": {
-    key: "Key signature",
-    time: "Time signature", 
-    type: "Music type (Jig/Reel/Air/etc.)",
-    chords: {
-        "Section Name": ["Chord1", "Chord2", "..."],
-        // Multiple sections supported
-    }
-}
-```
+### Direct Data Modification
+Modify `src/services/data.js` following the established structure, then restart the development server.
+
+### Migration from Old Format
+Use the built-in migration tool to convert existing data to the new Algolia-compatible format with proper validation and error handling.
